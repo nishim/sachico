@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  db:
+    build: ./docker/mysql
+    container_name: sachico-db
+    command: mysqld
+    volumes:
+      - sachico-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sachico
+      MYSQL_DATABASE: sachico
+      MYSQL_USER: sachico
+      MYSQL_PASSWORD: sachico
+      TZ: 'Asia/Tokyo'
+ 
+  embulk:
+    build: ./docker/embulk
+    tty: true
+    container_name: sachico-embulk
+    depends_on:
+      - db
+ 
+volumes:
+  sachico-data:
+    driver: local

@@ -1,0 +1,28 @@
+in:
+  type: search_analytics
+  client_id: {{ env.CLIENT_ID }}
+  client_secret: {{ env.CLIENT_SECRET }}
+  refresh_token: {{ env.REFRESH_TOKEN }}
+  site_url: {{ env.SITE_URL }}
+  start_date: {{ env.DATE }}
+  end_date: {{ env.DATE }}
+  dimensions:
+    - query
+  row_limit: 25000
+
+filters:
+  - type: column
+    add_columns:
+    - {name: report_date, type: string, default: {{ env.DATE }}}
+
+out:
+  type: mysql
+  host: db
+  user: sachico
+  password: "sachico"
+  database: sachico
+  table: queries
+  mode: insert
+  options: { characterEncoding: UTF-8 }
+  column_options:
+    report_date: { value_type: string, timestamp_format: '%Y-%m-%d', timezone: '+0900' }
